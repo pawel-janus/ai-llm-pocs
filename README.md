@@ -14,13 +14,15 @@ All POCs use the same **Financial Assistant** concept: AI-powered Q&A over SEC q
 
 ## Phase 1: MVP (Interview-ready)
 
-### financial-assistant-search *(next)*
+### [llm-search](https://github.com/pawel-janus/llm-search) ✅
 
-Semantic search engine over SEC quarterly filings. User searches by company/topic, returns most similar documents ranked by cosine similarity. No generation yet — pure vector search demonstrating embeddings and similarity matching.
+Semantic search engine over SEC quarterly filings. User searches by company/topic, returns most similar documents ranked by cosine similarity. Deployed to Cloud Run with 411ms warm latency, similarity scores 0.82-0.85.
 
-**Patterns:** Vertex AI Text Embeddings API · Firestore vector search · Cosine similarity · BigQuery data loading · Semantic search vs keyword search
+**Patterns:** Vertex AI Text Embeddings API (text-embedding-004, 768D) · Firestore vector search (FieldValue.vector wrapper) · COSINE distance · BigQuery data loading (275 SEC filings) · Region optimization (europe-west4 + europe-central2)
 
-`TypeScript` `Fastify` `Vertex AI` `Firestore` `BigQuery` `Cloud Run`
+**Key learnings:** FieldValue.vector() required for Firestore indexing · Region selection matters (400ms vs 900ms) · Egress cost negligible (~$0.003/month)
+
+`TypeScript` `Fastify` `Vertex AI` `Firestore` `BigQuery` `Cloud Run` `Deployed`
 
 ---
 
