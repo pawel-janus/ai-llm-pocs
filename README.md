@@ -6,7 +6,7 @@ They are proof-of-concept implementations built for learning and portfolio, not 
 
 All POCs use the same **Financial Assistant** concept: AI-powered Q&A over SEC quarterly filings and stock market data, evolving from basic semantic search to multi-source agents with conversation memory.
 
-**Framework:** Gemini 2.0 Flash (Vertex AI) · Fastify (TypeScript backend) · React  
+**Framework:** Gemini 2.5 Flash (Vertex AI) · Fastify (TypeScript backend) · React  
 **Data:** BigQuery (SEC filings, IEX stock prices) · Firestore vector search  
 **Deployment:** Cloud Run (GCP) · Docker containers
 
@@ -26,13 +26,15 @@ Semantic search engine over SEC quarterly filings. User searches by company/topi
 
 ---
 
-### financial-assistant-rag *(planned)*
+### [llm-rag](https://github.com/pawel-janus/llm-rag) ✅
 
-RAG (Retrieval-Augmented Generation) pipeline extending semantic search with Gemini 2.0 Flash. User asks questions in natural language, system retrieves relevant SEC filings, injects them into prompt, generates answer with citations. Demonstrates prompt engineering and hallucination prevention.
+RAG (Retrieval-Augmented Generation) pipeline extending semantic search with Gemini 2.5 Flash. User asks questions in natural language ("What was Apple's net income in 2019?"), system retrieves top 5 SEC filings via vector search, injects formatted context into prompt, generates natural language answer with citations. Deployed to Cloud Run with ~2s warm latency.
 
-**Patterns:** RAG pipeline (retrieve → inject → generate) · Gemini API integration · Prompt engineering · Citation tracking · Context window management · Hallucination prevention
+**Patterns:** RAG pipeline (retrieve → inject → generate) · Gemini 2.5 Flash via Vertex AI · Prompt engineering (example-driven, human-readable context) · Citation tracking · Human-readable formatting (NetIncomeLoss → Net Income, $10.04B) · Q&A UI with example questions
 
-`TypeScript` `Fastify` `Gemini 2.0 Flash` `Vertex AI` `Firestore` `BigQuery` `Cloud Run`
+**Key learnings:** Context formatting critical (tag translation, value formatting) · Prompt structure matters (example-driven vs restrictive) · Model availability varies by region (gemini-2.5-flash in europe-west4) · Cold start ~5s, warm ~2s
+
+`TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Firestore` `BigQuery` `Cloud Run` `Deployed`
 
 ---
 
