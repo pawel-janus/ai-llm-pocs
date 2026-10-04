@@ -38,85 +38,95 @@ RAG (Retrieval-Augmented Generation) pipeline extending semantic search with Gem
 
 ---
 
-### financial-assistant-agent *(planned)*
+### llm-agent *(planned)*
 
 Multi-source agent using Gemini Function Calling to combine SEC fundamentals with IEX stock prices. Agent orchestrates multiple tools (searchFilings, getStockPrice, calculatePE) to answer complex financial questions requiring data fusion from multiple datasets.
 
 **Patterns:** Gemini Function Calling · Multi-tool orchestration · Multi-source data fusion (SEC + IEX) · Agent decision-making · Tool execution pipeline · Financial metrics calculation (P/E ratio)
 
-`TypeScript` `Fastify` `Gemini 2.0 Flash` `Vertex AI` `Firestore` `BigQuery` `Cloud Run`
+`TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Firestore` `BigQuery` `Cloud Run`
 
 ---
 
-### financial-assistant-chat *(planned)*
+### llm-chat *(planned)*
 
 Multi-turn conversation system with context management. User can ask follow-up questions referencing previous context. Conversation history stored in Firestore, entity extraction (ticker, period) for reference resolution, context window limiting.
 
 **Patterns:** Conversation storage (Firestore) · Context window management · Multi-turn dialogue · Session management · Entity extraction · Reference resolution ("it", "the stock" → AAPL)
 
-`TypeScript` `Fastify` `Gemini 2.0 Flash` `Vertex AI` `Firestore` `BigQuery` `Cloud Run`
+`TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Firestore` `BigQuery` `Cloud Run`
 
 ---
 
 ## Phase 2: Advanced Patterns (Future)
 
-### financial-assistant-advanced-rag *(planned)*
+### llm-advanced-rag *(planned)*
 
 Production RAG patterns: text chunking strategies, metadata filtering, reranking after vector search, hybrid search (vector + keyword). Improves retrieval precision for complex queries over large document collections.
 
 **Patterns:** Text chunking (500-1000 tokens) · Chunk overlap · Metadata filtering (sector, company size) · Reranking (Cohere API) · Hybrid search (vector + BM25) · Query expansion
 
-`TypeScript` `Fastify` `Gemini 2.0 Flash` `Vertex AI` `Firestore` `Cohere` `Cloud Run`
+`TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Firestore` `Cohere` `Cloud Run`
 
 ---
 
-### financial-assistant-multi-step *(planned)*
+### llm-multi-step-agent *(planned)*
 
 Multi-step agent with chain-of-thought reasoning and planning. Agent breaks complex tasks into steps, executes sequentially, handles tool chaining (output of tool1 → input to tool2), recovers from errors.
 
 **Patterns:** Chain of thought prompting · Agent planning · Tool chaining · Multi-step orchestration · ReAct pattern (Reason → Act → Observe) · Error recovery
 
-`TypeScript` `Fastify` `Gemini 2.0 Flash` `Vertex AI` `Cloud Run`
+`TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Cloud Run`
 
 ---
 
-### financial-assistant-caching *(planned)*
+### llm-caching *(planned)*
 
 Semantic caching for cost optimization. Cache LLM responses based on embedding similarity (not exact string match). Same question paraphrased → cached answer. 10x cost reduction for common queries.
 
 **Patterns:** Semantic caching · Redis vector search (RediSearch) · Embedding-based cache key · TTL strategies · Cache invalidation · Cost optimization (90% cache hit rate target)
 
-`TypeScript` `Fastify` `Gemini 2.0 Flash` `Vertex AI` `Redis` `Memorystore` `Cloud Run`
+`TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Redis` `Memorystore` `Cloud Run`
 
 ---
 
-### financial-assistant-guardrails *(planned)*
+### llm-guardrails *(planned)*
 
 Content filtering, PII detection, prompt injection prevention. Input validation (Google Cloud DLP API for PII), toxicity detection (Perspective API), output filtering (sensitive data patterns), security against adversarial prompts.
 
 **Patterns:** PII detection (Cloud DLP API) · Toxicity filtering (Perspective API) · Prompt injection prevention · Output validation · Rate limiting · Security guardrails
 
-`TypeScript` `Fastify` `Gemini 2.0 Flash` `Cloud DLP` `Perspective API` `Cloud Run`
+`TypeScript` `Fastify` `Gemini 2.5 Flash` `Cloud DLP` `Perspective API` `Cloud Run`
 
 ---
 
-### financial-assistant-multimodal *(planned)*
+### llm-multimodal *(planned)*
 
-Multi-modal RAG over financial charts and diagrams. Gemini 2.0 Flash vision extracts text from images, embeds descriptions, retrieves based on visual content. User can upload charts/screenshots, ask questions about visual data.
+Multi-modal RAG over financial charts and diagrams. Gemini 2.5 Flash vision extracts text from images, embeds descriptions, retrieves based on visual content. User can upload charts/screenshots, ask questions about visual data.
 
 **Patterns:** Gemini Vision API · Multimodal embeddings (image + text) · Image understanding · Cloud Storage integration · Visual Q&A · Chart/diagram analysis
 
-`TypeScript` `Fastify` `Gemini 2.0 Flash` `Vertex AI` `Cloud Storage` `Cloud Run`
+`TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Cloud Storage` `Cloud Run`
 
 ---
 
-### financial-assistant-llmops *(planned)*
+### llm-llmops *(planned)*
 
 Production LLMOps patterns: structured logging, monitoring, prompt versioning, A/B testing, cost tracking, user feedback collection. Cloud Logging for prompts/responses/tokens, Grafana dashboards, budget alerts.
 
 **Patterns:** Structured logging (Cloud Logging) · Latency monitoring · Token usage tracking · Prompt versioning (Git) · A/B testing (split traffic) · User feedback (thumbs up/down) · Cost attribution · Grafana dashboards
 
-`TypeScript` `Fastify` `Gemini 2.0 Flash` `Cloud Logging` `Cloud Monitoring` `Grafana` `Cloud Run`
+`TypeScript` `Fastify` `Gemini 2.5 Flash` `Cloud Logging` `Cloud Monitoring` `Grafana` `Cloud Run`
+
+---
+
+### llm-vectordb-benchmark *(planned)*
+
+Benchmark of three vector database options on the same SEC filings dataset: Firestore vector search, Supabase pgvector and Vertex AI Vector Search. Compares latency (p50/p95/p99), accuracy (recall@5), setup complexity, cost at several scales and production readiness, ending with a data-driven recommendation.
+
+**Patterns:** Vector DB abstraction layer · Latency benchmarking · Recall@5 comparison · Cost projection · Production-readiness assessment
+
+`TypeScript` `Firestore` `Supabase` `pgvector` `Vertex AI Vector Search`
 
 ---
 
