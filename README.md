@@ -7,7 +7,7 @@ They are proof-of-concept implementations built for learning and portfolio, not 
 All POCs use the same **Financial Assistant** concept: AI-powered Q&A over SEC quarterly filings and stock market data, evolving from basic semantic search to multi-source agents with conversation memory.
 
 **Framework:** Gemini 2.5 Flash (Vertex AI) · Fastify (TypeScript backend) · React  
-**Data:** BigQuery (SEC filings, IEX stock prices) · Firestore vector search  
+**Data:** BigQuery (SEC filings, daily stock prices) · Firestore vector search  
 **Deployment:** Cloud Run (GCP) · Docker containers
 
 ---
@@ -38,11 +38,23 @@ RAG (Retrieval-Augmented Generation) pipeline extending semantic search with Gem
 
 ---
 
+### llm-data ✅ *(private repository)*
+
+ETL / data layer of the Financial Assistant, the source of the data the later POCs query. For a configurable list of companies it loads SEC quarterly facts and daily stock prices into BigQuery. Raw files are kept in Cloud Storage exactly as delivered; one Cloud Run Job per data source validates, transforms and loads them idempotently; rows that fail validation go to a quarantine table instead of being dropped. **The repository is private** (it handles data with licence restrictions), so there is no link.
+
+**GCP services:** BigQuery (load jobs, MERGE, datasets per data domain, `INFORMATION_SCHEMA` for usage tracking) · Cloud Storage (raw layer, private bucket) · Cloud Run Jobs (one per source, no public URL) · Cloud Build and Artifact Registry (image built without local Docker) · IAM (dedicated service accounts, least privilege)
+
+**Patterns:** Raw layer exactly as delivered · One processor per source · Idempotent loads (MERGE, content hash) · Validation with quarantine · Incremental fetch with watermarks · Data source evaluation (public dataset vs EDGAR) · Cost control inside free tiers
+
+`TypeScript` `BigQuery` `Cloud Storage` `Cloud Run Jobs` `Cloud Build` `Artifact Registry` `IAM` `Private repo`
+
+---
+
 ### llm-agent *(planned)*
 
-Multi-source agent using Gemini Function Calling to combine SEC fundamentals with IEX stock prices. Agent orchestrates multiple tools (searchFilings, getStockPrice, calculatePE) to answer complex financial questions requiring data fusion from multiple datasets.
+Multi-source agent using Gemini Function Calling to combine SEC fundamentals with daily stock prices. Agent orchestrates multiple tools (searchFilings, getStockPrice, calculatePE) to answer complex financial questions requiring data fusion from multiple datasets.
 
-**Patterns:** Gemini Function Calling · Multi-tool orchestration · Multi-source data fusion (SEC + IEX) · Agent decision-making · Tool execution pipeline · Financial metrics calculation (P/E ratio)
+**Patterns:** Gemini Function Calling · Multi-tool orchestration · Multi-source data fusion (SEC + prices) · Agent decision-making · Tool execution pipeline · Financial metrics calculation (P/E ratio)
 
 `TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Firestore` `BigQuery` `Cloud Run`
 
