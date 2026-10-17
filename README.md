@@ -50,13 +50,15 @@ ETL / data layer of the Financial Assistant, the source of the data the later PO
 
 ---
 
-### llm-agent *(planned)*
+### [llm-agent](https://github.com/pawel-janus/llm-agent) ✅
 
-Multi-source agent using Gemini Function Calling to combine SEC fundamentals with daily stock prices. Agent orchestrates multiple tools (searchFilings, getStockPrice, calculatePE) to answer complex financial questions requiring data fusion from multiple datasets.
+Agent using Gemini function calling over the BigQuery data layer. Five tools (company list, SEC facts, tag list, stock price, price change) are declared with JSON Schema and validated with Zod; the model decides which to call, in parallel when it can, and combines SEC figures with daily prices in one answer. Empty results carry a note and the nearest available periods, so the agent reports data gaps instead of estimating. The UI shows each tool call (arguments, duration, result). Deployed privately to Cloud Run with a dedicated service account and no public access.
 
-**Patterns:** Gemini Function Calling · Multi-tool orchestration · Multi-source data fusion (SEC + prices) · Agent decision-making · Tool execution pipeline · Financial metrics calculation (P/E ratio)
+**Patterns:** Gemini function calling · Multi-tool orchestration (agent loop with round limit) · Multi-source data fusion (SEC + prices) · Tool argument validation (Zod) · Honest "no data" behaviour enforced in code · Cost-capped BigQuery queries · Tool-call transparency in the UI
 
-`TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Firestore` `BigQuery` `Cloud Run`
+**Key learnings:** Behaviour that must happen belongs in code, not in the prompt · Fiscal-year labels and sparse filings need a derived data layer · Adjusted prices and as-reported EPS make P/E unreliable, so it was left out
+
+`TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `BigQuery` `Cloud Run` `Deployed privately`
 
 ---
 
