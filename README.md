@@ -1,6 +1,6 @@
 # AI/LLM Application Development — Reference Implementations
 
-Fullstack TypeScript developer building production AI/LLM application patterns with Google Cloud. These repositories explore AI application development progressively — embeddings, RAG, agents, multi-turn conversations, and production optimizations.
+Fullstack TypeScript developer building production AI/LLM application patterns with Google Cloud. These repositories explore AI application development progressively — embeddings, RAG, agents, multi-turn conversations, an MCP server, and production optimizations.
 
 They are proof-of-concept implementations built for learning and portfolio, not production systems. The goal is to understand each AI/LLM pattern in isolation and have working references demonstrating real-world use cases.
 
@@ -71,6 +71,20 @@ Multi-turn version of the agent: the user can ask follow-ups ("And Walmart's?") 
 **Key learnings:** History is application state handled in code, not a model tool · Storing only text turns keeps messages small but a follow-up needing a number calls the tool again · Sending the whole history works for short chats and needs trimming or summarizing for long ones
 
 `TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Firestore` `BigQuery` `Cloud Run` `Deployed privately`
+
+---
+
+## Phase 1b: Platform and data
+
+### [llm-mcp](https://github.com/pawel-janus/llm-mcp) ✅
+
+MCP (Model Context Protocol) server that exposes the Financial Assistant data as read-only tools: five tools over SEC filing figures and daily stock prices in BigQuery (company list, facts, tag list, price, price change), in two groups. Any MCP client can call them instead of each app carrying its own copy of the data access code. One codebase serves two transports: stdio for local use (MCP Inspector, Claude Code) and stateless Streamable HTTP, deployed privately to Cloud Run with IAM-only access and a read-only service account. Tool schemas are Zod 4 and reach clients as JSON Schema; invalid arguments come back as a tool result the model can act on.
+
+**Patterns:** MCP server (tools, annotations) · Stateless Streamable HTTP (a new server per request) · stdio and HTTP from one codebase · Schema validation reused as the tool contract · Private service behind IAM, reached locally through an authenticated proxy · Least-privilege service account
+
+**Key learnings:** MCP SDK v2 is a set of small packages and the Fastify adapter only wraps the app, the protocol is served by `createMcpHandler` · Stateless servers fit Cloud Run: create the server and transport per request · Tool descriptions are part of the data contract, so the caveats about the data live there
+
+`TypeScript` `MCP` `Fastify` `BigQuery` `Cloud Run` `Deployed privately`
 
 ---
 
