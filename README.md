@@ -62,13 +62,15 @@ Agent using Gemini function calling over the BigQuery data layer. Five tools (co
 
 ---
 
-### llm-chat *(planned)*
+### [llm-chat](https://github.com/pawel-janus/llm-chat) ✅
 
-Multi-turn conversation system with context management. User can ask follow-up questions referencing previous context. Conversation history stored in Firestore, entity extraction (ticker, period) for reference resolution, context window limiting.
+Multi-turn version of the agent: the user can ask follow-ups ("And Walmart's?") that refer to earlier turns. Conversations are stored in Firestore (one document per session, messages in a subcollection), so the backend keeps no state and survives scale-to-zero and several instances. The whole text history is sent to Gemini with each question and the model resolves references itself; history handling lives in code around the agent loop, not in the tools. The UI has a session list, message history, a tool-call log and an alert for long conversations. Deployed privately to Cloud Run with a dedicated service account and no public access.
 
-**Patterns:** Conversation storage (Firestore) · Context window management · Multi-turn dialogue · Session management · Entity extraction · Reference resolution ("it", "the stock" → AAPL)
+**Patterns:** Conversation storage (Firestore) · Session management (list, open, delete) · Multi-turn dialogue with history in the prompt · Reference resolution by the model · Stateless backend · Long-conversation alert (trimming and summarizing left for later)
 
-`TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Firestore` `BigQuery` `Cloud Run`
+**Key learnings:** History is application state handled in code, not a model tool · Storing only text turns keeps messages small but a follow-up needing a number calls the tool again · Sending the whole history works for short chats and needs trimming or summarizing for long ones
+
+`TypeScript` `Fastify` `Gemini 2.5 Flash` `Vertex AI` `Firestore` `BigQuery` `Cloud Run` `Deployed privately`
 
 ---
 
