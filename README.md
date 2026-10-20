@@ -1,6 +1,6 @@
 # AI/LLM Application Development — Reference Implementations
 
-Fullstack TypeScript developer building production AI/LLM application patterns with Google Cloud. These repositories explore AI application development progressively — embeddings, RAG, agents, multi-turn conversations, an MCP server, and production optimizations.
+Fullstack TypeScript developer building production AI/LLM application patterns with Google Cloud. These repositories explore AI application development progressively — embeddings, RAG, agents, multi-turn conversations, an MCP server, a data platform, and production optimizations.
 
 They are proof-of-concept implementations built for learning and portfolio, not production systems. The goal is to understand each AI/LLM pattern in isolation and have working references demonstrating real-world use cases.
 
@@ -40,7 +40,7 @@ RAG (Retrieval-Augmented Generation) pipeline extending semantic search with Gem
 
 ### llm-data ✅ *(private repository)*
 
-ETL / data layer of the Financial Assistant, the source of the data the later POCs query. For a configurable list of companies it loads SEC quarterly facts and daily stock prices into BigQuery. Raw files are kept in Cloud Storage exactly as delivered; one Cloud Run Job per data source validates, transforms and loads them idempotently; rows that fail validation go to a quarantine table instead of being dropped. **The repository is private** (it handles data with licence restrictions), so there is no link.
+ETL / data layer of the Financial Assistant, the source of the data the later POCs query. For a configurable list of companies it loads SEC quarterly facts and daily stock prices into BigQuery. Raw files are kept in Cloud Storage exactly as delivered; one Cloud Run Job per data source validates, transforms and loads them idempotently; rows that fail validation go to a quarantine table instead of being dropped. **The repository is private** (it handles data with licence restrictions), so there is no link. Superseded by `llm-data-platform` (see Phase 1b), which carries the same ideas further.
 
 **GCP services:** BigQuery (load jobs, MERGE, datasets per data domain, `INFORMATION_SCHEMA` for usage tracking) · Cloud Storage (raw layer, private bucket) · Cloud Run Jobs (one per source, no public URL) · Cloud Build and Artifact Registry (image built without local Docker) · IAM (dedicated service accounts, least privilege)
 
@@ -85,6 +85,16 @@ MCP (Model Context Protocol) server that exposes the Financial Assistant data as
 **Key learnings:** MCP SDK v2 is a set of small packages and the Fastify adapter only wraps the app, the protocol is served by `createMcpHandler` · Stateless servers fit Cloud Run: create the server and transport per request · Tool descriptions are part of the data contract, so the caveats about the data live there
 
 `TypeScript` `MCP` `Fastify` `BigQuery` `Cloud Run` `Deployed privately`
+
+---
+
+### llm-data-platform ✅ *(private repository)*
+
+Data platform behind the Financial Assistant, successor of `llm-data`: an npm workspaces monorepo with one ETL per source, one MCP server per data domain and a shared schema package per domain. SEC EDGAR facts of nine companies and daily prices are loaded into BigQuery by Cloud Run Jobs (incremental fetch, content hashes, validation with quarantine); views give the current value of each fact, the gaps of the data and 15 metrics with derived standalone quarters. Two private MCP servers on Cloud Run serve the data to a model, including growth, ratios, trailing twelve months and company comparison computed in code, and every answer carries data-quality flags (gaps, restated figures, derived quarters). 40 SQL data checks guard the loaded data. **The repository is private** (licence-restricted price data), so there is no link.
+
+**Patterns:** Monorepo with shared schemas · ETL per source, MCP per domain · Derived views over restated filings · Standalone quarters by subtraction · Data-quality flags in tool results · SQL data checks with golden cases · Least-privilege service account per app
+
+`TypeScript` `MCP` `BigQuery` `Cloud Storage` `Cloud Run Jobs` `Cloud Run` `Cloud Build` `IAM` `Private repo`
 
 ---
 
