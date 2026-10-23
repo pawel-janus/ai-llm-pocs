@@ -1,5 +1,8 @@
 # AI/LLM Application Development — Reference Implementations
 
+> [!IMPORTANT]
+> **Showcase samples only.** The projects listed below are small demonstration samples built to illustrate patterns and techniques. They are not the code I work on professionally. That code is proprietary to my employer and cannot be disclosed.
+
 Fullstack TypeScript developer building production AI/LLM application patterns with Google Cloud. These repositories explore AI application development progressively — embeddings, RAG, agents, multi-turn conversations, an MCP server, a data platform, and production optimizations.
 
 They are proof-of-concept implementations built for learning and portfolio, not production systems. The goal is to understand each AI/LLM pattern in isolation and have working references demonstrating real-world use cases.
